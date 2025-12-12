@@ -1,0 +1,19 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Sync files to cPanel
+        run: |
+          curl -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
+          -T index.php \
+          "https://${{ secrets.CPANEL_HOST }}/public_html/"

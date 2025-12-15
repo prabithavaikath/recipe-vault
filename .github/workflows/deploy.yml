@@ -1,8 +1,9 @@
-name: Deploy to cPanel
+name: Deploy to Shared Hosting
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -12,8 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Sync files to cPanel
+      - name: Add SSH key
         run: |
-          curl -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
-          -T index.php \
-          "https://${{ secrets.CPANEL_HOST }}/public_html/"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo -e "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+
+      - name: Deploy over SSH
+        run: |
+          rsync -avz --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            ./ \
+            zsjnftpy@prabitha.online:/home/zsjnftpy/prabitha.online/cicd/ \
+            -e "ssh -p 22999 -i ~/.ssh/id_rsa"

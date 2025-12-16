@@ -1,30 +1,4 @@
-name: Deploy to Shared Hosting
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Add SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo -e "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-
       - name: Deploy over SSH
         run: |
-          rsync -avz --delete \
-            --exclude ".git" \
-            --exclude ".github" \
-            ./ \
-            zsjnftpy@prabitha.online:/home/zsjnftpy/prabitha.online/cicd/ \
-            -e "ssh -p 22999 -i ~/.ssh/id_rsa"
+          scp -P 22999 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./ \
+          zsjnftpy@prabitha.online:/home/zsjnftpy/public_html/cicd/

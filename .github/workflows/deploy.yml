@@ -22,5 +22,5 @@ jobs:
 
       - name: Deploy over SCP
         run: |
-          scp -P SSH_PORT -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./ \
+          scp -P 22999 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./ \
           zsjnftpy@CPANEL_USERNAME:DEPLOY_PATH

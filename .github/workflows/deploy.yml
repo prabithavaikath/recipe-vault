@@ -23,4 +23,4 @@ jobs:
       - name: Deploy over SCP
         run: |
           scp -P 22999 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./ \
-          zsjnftpy@SSH_HOST:DEPLOY_PATH
+          zsjnftpy@prabitha.online:DEPLOY_PATH
